@@ -1542,6 +1542,10 @@ PrefabInstance:
       propertyPath: _cameraObject
       value: 
       objectReference: {fileID: 963194225}
+    - target: {fileID: 361699754946617453, guid: 7e2431f87424fd044942fd5bf857a6ba, type: 3}
+      propertyPath: _movementSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 361699754946617454, guid: 7e2431f87424fd044942fd5bf857a6ba, type: 3}
       propertyPath: _myGameManager
       value: 

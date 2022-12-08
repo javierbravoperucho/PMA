@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 945050c5641f898419850eac6ce9cb4a, type: 3}
   m_Name: LevelData2
   m_EditorClassIdentifier: 
-  _matchDuration: 60
-  _levelGoal: 8
+  _matchDuration: 40
+  _levelGoal: 4
   _levelPrefab: {fileID: 6531814369706142695, guid: 5ee799ba465c04f4eb81aa164b87ad5b, type: 3}
