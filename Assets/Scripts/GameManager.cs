@@ -138,21 +138,22 @@ public class GameManager : MonoBehaviour
                 if (!_player.activeSelf)
                 {
                     LoadLevel();
+                    _player.GetComponent<MovementComponent>().enabled = true;
                     _UIManager.SetUpGameHUD(_nRound, _goal, _remainingTime);
                 }
-               if(_current == _goal)
-                {
+               if(_current >= _goal)
+               {
                     UnloadLevel();
                     LoadLevel();
                     _nRound++;
                     _current = 0;
                     _UIManager.SetUpGameHUD(_nRound, _goal, _remainingTime);
-                }
-                if (_remainingTime <= 0)
-                {
-                    RequestStateChange(GameStates.GAMEOVER);
-                    UnloadLevel();
-                }
+               }
+               if (_remainingTime <= 0)
+               {
+                   RequestStateChange(GameStates.GAMEOVER);
+                   UnloadLevel();
+               }
                 break;
 
             case GameStates.GAMEOVER:
@@ -176,14 +177,12 @@ public class GameManager : MonoBehaviour
     private void LoadLevel()
     {
         i = Random.Range(0, _levels.Length);
-      
+        _player.GetComponent<MovementComponent>().enabled = false;
         _levelManager = _levels[i]._levelPrefab.GetComponent<LevelManager>();
         levelObject = Instantiate(_levels[i]._levelPrefab, _levels[i]._levelPrefab.transform.position, Quaternion.identity);
-        _levelManager.SetPlayer(_player);
-        _player.GetComponent<MovementComponent>().GoToPoint(_player.transform.position);
+        _levelManager.SetPlayer(_player);      
         _goal = _levels[i]._levelGoal;
         _remainingTime = _levels[i]._matchDuration;
-        
 
     }
     /// <summary>
@@ -220,6 +219,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        Debug.Log(_player.GetComponent<MovementComponent>().enabled);
         _remainingTime -= Time.deltaTime;
         _UIManager.UpdateGameHUD(Current, _remainingTime);
         UpdateState(_currentState);

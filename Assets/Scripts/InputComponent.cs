@@ -5,24 +5,41 @@ using UnityEngine;
 [RequireComponent(typeof(ScreenToWorldComponent))]
 public class InputComponent : MonoBehaviour
 {
-    private float _maxDistance = 100.0f;
+
     #region references
+    /// <summary>
+    /// Reference to own screentoworld component
+    /// </summary>
     private ScreenToWorldComponent _myScreenToWorldComp;
+    /// <summary>
+    /// Reference to own movement component
+    /// </summary>
     private MovementComponent _myMovementComponent;
-    //private Camera _camera;
+    /// <summary>
+    /// Reference to own planting component
+    /// </summary>
+    private PlantingComponent _myPlantingComponent;
     #endregion
+
     #region properties
-    //private RaycastHit _myRaycastHit;
     private LayerMask _myLayerMask;
+    /// <summary>
+    /// Mouse position
+    /// </summary>
     public Vector3 _mousePosition;
     #endregion
-    // Start is called before the first frame update
+
+    /// <summary>
+    /// References initialization
+    /// </summary>
     void Start()
     {
-       // _camera = _cameraObject.GetComponent<Camera>();
+        _myMovementComponent = GetComponent<MovementComponent>();
 
     }
-    // Update is called once per frame
+    /// <summary>
+    /// Receives input and calls required methods
+    /// </summary>
     void Update()
     {
         _mousePosition = Input.mousePosition;
@@ -30,27 +47,15 @@ public class InputComponent : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-       
-             GetComponent<MovementComponent>().GoToPoint(_mousePosition);
+             _myMovementComponent.GoToPoint(_mousePosition);
              GetComponent<ScreenToWorldComponent>().ScreenToWorldPoint(_mousePosition);
-
-            /*Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-           if (Physics.Raycast(ray, out _myRaycastHit, _maxDistance))
-           {
-
-               Destroy(_startButton);
-               GetComponent<FollowCamera>().ActiveCamera();
-           }*/
-
 
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            PlantingComponent auxPlantingComponent = GetComponent<PlantingComponent>();
-            auxPlantingComponent.TryPlant(_mousePosition);
-            
+            _myPlantingComponent = GetComponent<PlantingComponent>();
+            _myPlantingComponent.TryPlant(_mousePosition);
 
-            //while (!_myMovementComponent.Speed0()) ;
         }
 
     }

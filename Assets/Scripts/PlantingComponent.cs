@@ -26,6 +26,10 @@ public class PlantingComponent : MonoBehaviour
     /// Reference to desired soil
     /// </summary>
     private SoilComponent _desiredSoilComponent;
+    /// <summary>
+    /// Reference to game manager
+    /// </summary>
+    private GameManager auxGameManager;
     #endregion
     #region properties
     /// <summary>
@@ -51,41 +55,38 @@ public class PlantingComponent : MonoBehaviour
     #region methods
     /// <summary>
     /// Detects if the player has clicked a valid soil area and returns corresponding
-   // component
- /// </summary>
- /// <param name="pointToEvaluate">Point to be evaluated</param>
- /// <returns></returns>
+    //  component
+    /// </summary>
+    /// <param name="pointToEvaluate">Point to be evaluated</param>
+    /// <returns></returns>
    private  SoilComponent EvaluatePoint(Vector3 pointToEvaluate)
     {
         Ray ray = _camera.ScreenPointToRay(pointToEvaluate);
-        _myLayerMask = LayerMask.GetMask("Tierra");
 
         if (Physics.Raycast(ray, out _myHitInfo, 100, _myLayerMask))
         {
-            _plantingState = PlantingStates.IsPlanting;
+           _plantingState = PlantingStates.IsPlanting;
            SoilComponent soilComponent = _myHitInfo.collider.GetComponent<SoilComponent>();
            return soilComponent;
             
-
         }
         return null;
     }
     /// <summary>
-    /// Tries to plant in a point. If valid point, sotres the component and goes to
-   // desired point
- /// </summary>
- /// <param name="plantingPoint">Point where the player wants to plant in</param>
+    /// Tries to plant in a point. If valid point, sorts the component and goes to
+    //  desired point
+    /// </summary>
+    /// <param name="plantingPoint">Point where the player wants to plant in</param>
     public void TryPlant(Vector3 plantingPoint)
     {
-        _myMovementComponent = GetComponent<MovementComponent>();
         
-        SoilComponent auxSoilComponent = EvaluatePoint(plantingPoint);
-        if (!auxSoilComponent.IsPlanted)
+        _desiredSoilComponent = EvaluatePoint(plantingPoint);
+        if (!_desiredSoilComponent.IsPlanted && auxGameManager.Current >= 1)
         {
             GetComponent<InputComponent>().enabled = false;
             _myMovementComponent.GoToPoint(plantingPoint);
-        }
-        
+        }else _plantingState = PlantingStates.None;
+
 
     }
     /// <summary>
@@ -93,16 +94,18 @@ public class PlantingComponent : MonoBehaviour
     /// </summary>
     /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Tierra" && _plantingState == PlantingStates.IsPlanting) {
-            GetComponent<InputComponent>().enabled = true;
-            GameManager auxGameManager = _myGameManager.GetComponent<GameManager>();
+    { 
+
+        if (other.gameObject.tag == "Tierra" && _plantingState == PlantingStates.IsPlanting && !_desiredSoilComponent.IsPlanted && _desiredSoilComponent == other.GetComponent<SoilComponent>()) {
+       
             if (auxGameManager.Current >=1)
             {
+                GetComponent<InputComponent>().enabled = true;
                 Debug.Log("Arbol Plantado");
-                _desiredSoilComponent = other.GetComponent<SoilComponent>();
+
                 _desiredSoilComponent.Plant(_plantPrefab);
                 auxGameManager.OnPlantApple();
+                _plantingState = PlantingStates.None;
             }
             _plantingState = PlantingStates.None;
         }
@@ -113,8 +116,9 @@ public class PlantingComponent : MonoBehaviour
     /// </summary>
     void Start()
     {
-      
-       _camera = GameObject.Find("Main Camera").GetComponent<Camera>();
-        
+         auxGameManager = _myGameManager.GetComponent<GameManager>();
+        _camera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        _myMovementComponent = GetComponent<MovementComponent>();
+        _myLayerMask = LayerMask.GetMask("Tierra");
     }
 }

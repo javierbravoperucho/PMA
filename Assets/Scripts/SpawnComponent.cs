@@ -38,17 +38,7 @@ public class SpawnComponent : MonoBehaviour
     /// </summary>
     private float _elapsedTime = 0.0f;
     #endregion
-    #region methods
-  /* private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Apple")
-        {           
-           _apple = other.gameObject;
-        }
 
-        Debug.Log("hay manzana");
-    }*/
-    #endregion
     /// <summary>
     /// Initialization of references and stuff
     /// </summary>
@@ -63,7 +53,10 @@ public class SpawnComponent : MonoBehaviour
     /// </summary>
     void Update()
     {
-        _elapsedTime += Time.deltatime;
+        if (_apple == null)
+        {
+            _elapsedTime += Time.deltaTime;
+        }
 
         if (_apple==null && _elapsedTime > _timeToSpawn)
         {

@@ -113,9 +113,9 @@ public class UIManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        //_menus[0] = _mainMenu;
-        // _menus[1] = _gameplayHUD;
-        // _menus[2] = _gameOverMenu;
+       // _menus[1] = _mainMenu;
+       // _menus[2] = _gameplayHUD;
+       // _menus[3] = _gameOverMenu;
 
         GameManager.Instance.RegisterUIManager(this);
     }
