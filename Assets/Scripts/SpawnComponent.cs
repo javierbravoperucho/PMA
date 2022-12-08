@@ -55,6 +55,7 @@ public class SpawnComponent : MonoBehaviour
     void Start()
     {
         _myTransform = gameObject.transform;
+        _timeToSpawn = Random.Range(_minSpawnInterval, _maxSpawnInterval);
 
     }
     /// <summary>
@@ -62,15 +63,12 @@ public class SpawnComponent : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if(_apple == null)
-        {
-            _elapsedTime += Time.deltaTime;
-            _timeToSpawn = Random.Range(_minSpawnInterval, _maxSpawnInterval);
-        }
+        _elapsedTime += Time.deltatime;
 
         if (_apple==null && _elapsedTime > _timeToSpawn)
         {
             Debug.Log("manzana");
+            _timeToSpawn = Random.Range(_minSpawnInterval, _maxSpawnInterval);
             _elapsedTime = 0.0f;
 
             _apple = Instantiate(_applePrefab, _myTransform.position, Quaternion.identity);
